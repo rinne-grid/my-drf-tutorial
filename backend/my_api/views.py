@@ -2,12 +2,13 @@ from django.contrib.auth.models import User
 from rest_framework import generics, permissions
 from my_api.models import Snippet
 from my_api.serializers import SnippetSerializer, UserSerializer
+from my_api.permissions import IsOwnerOrReadOnly
 
 
 class SnippetList(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     # スニペットを作成したユーザをスニペットインスタンスに紐付ける
     def perform_create(self, serializer):
@@ -17,7 +18,7 @@ class SnippetList(generics.ListCreateAPIView):
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
 class UserList(generics.ListAPIView):
